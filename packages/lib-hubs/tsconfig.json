@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "module": "es2015",
+    "target": "es2015",
+    "noImplicitAny": true,
+    "outDir": "./lib/es2015",
+    "moduleResolution": "node",
+    "sourceMap": true
+  },
+  "exclude": ["node_modules", "lib"]
+}
