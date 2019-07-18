@@ -2,7 +2,7 @@ import {
   Mesh,
   InstancedBufferGeometry,
   PlaneBufferGeometry,
-  RawShaderMaterial,
+  ShaderMaterial,
   Vector3,
   Color,
   InstancedBufferAttribute,
@@ -14,52 +14,40 @@ import {
 import { EasingFunctions, lerp, clamp } from "../utils";
 
 const vertexShader = `
-      precision highp float;
+  attribute vec4 particlePosition;
+  attribute vec4 particleColor;
+  attribute float particleAngle;
 
-      #define BASE_PARTICLE_SIZE 300.0
+  varying vec4 vColor;
+  varying vec2 vUV;
 
-      uniform mat4 modelViewMatrix;
-      uniform mat4 projectionMatrix;
+  void main() {
+    vUV = uv;
+    vColor = particleColor;
 
-      attribute vec3 position;
-      attribute vec2 uv;
+    float particleScale = particlePosition.w;
+    vec4 transformedPosition = modelViewMatrix * vec4(particlePosition.xyz, 1.0);
+    
+    vec3 rotatedPosition = position;
+    rotatedPosition.x = cos( particleAngle ) * position.x - sin( particleAngle ) * position.y;
+    rotatedPosition.y = sin( particleAngle ) * position.x + cos( particleAngle ) * position.y;
 
-      attribute vec4 particlePosition;
-      attribute vec4 particleColor;
-      attribute float particleAngle;
+    transformedPosition.xyz += rotatedPosition * particleScale;
 
-      varying vec4 vColor;
-      varying vec2 vUV;
-
-      void main() {
-        vUV = uv;
-        vColor = particleColor;
-
-        float particleScale = particlePosition.w;
-        vec4 transformedPosition = modelViewMatrix * vec4(particlePosition.xyz, 1.0);
-        
-        vec3 rotatedPosition = position;
-        rotatedPosition.x = cos( particleAngle ) * position.x - sin( particleAngle ) * position.y;
-        rotatedPosition.y = sin( particleAngle ) * position.x + cos( particleAngle ) * position.y;
-
-        transformedPosition.xyz += rotatedPosition * particleScale;
-
-        gl_Position = projectionMatrix * transformedPosition;
-      }
-      `;
+    gl_Position = projectionMatrix * transformedPosition;
+  }
+`;
 
 const fragmentShader = `
-      precision highp float;
+  uniform sampler2D map;
 
-      uniform sampler2D texture;
+  varying vec2 vUV;
+  varying vec4 vColor;
 
-      varying vec2 vUV;
-      varying vec4 vColor;
-
-      void main() {
-        gl_FragColor = texture2D(texture,  vUV) * vColor;
-      }
-  `;
+  void main() {
+    gl_FragColor = texture2D(map,  vUV) * vColor;
+  }
+`;
 
 interface ParticleEmitterGeometry extends InstancedBufferGeometry {
   attributes: {
@@ -101,7 +89,7 @@ export class ParticleEmitter extends Mesh {
   velocityCurve: string;
   sizeCurve: string;
 
-  material: RawShaderMaterial;
+  material: ShaderMaterial;
   geometry: ParticleEmitterGeometry;
 
   constructor(texture: Texture) {
@@ -109,9 +97,9 @@ export class ParticleEmitter extends Mesh {
     const geometry = new InstancedBufferGeometry();
     geometry.index = planeGeometry.index;
     geometry.attributes = planeGeometry.attributes;
-    const material = new RawShaderMaterial({
+    const material = new ShaderMaterial({
       uniforms: {
-        texture: { value: texture }
+        map: { value: texture }
       },
       vertexShader,
       fragmentShader,
@@ -270,7 +258,7 @@ export class ParticleEmitter extends Mesh {
   copy(source: this, recursive = true) {
     super.copy(source, recursive);
 
-    this.material.uniforms.texture.value = source.material.uniforms.texture.value;
+    this.material.uniforms.map.value = source.material.uniforms.map.value;
     this.startColor = source.startColor;
     this.middleColor = source.middleColor;
     this.endColor = source.endColor;
