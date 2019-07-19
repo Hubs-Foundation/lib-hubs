@@ -1,6 +1,6 @@
 ## Contributing
 
-This repository is setup as a monorepo using [lerna](https://lerna.js.org/) and (yarn workspaces)[https://yarnpkg.com/lang/en/docs/workspaces/].
+This repository is setup as a monorepo using [lerna](https://lerna.js.org/) and [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/).
 
 ### Setup
 
