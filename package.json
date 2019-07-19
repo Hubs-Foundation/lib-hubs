@@ -16,7 +16,7 @@
     "typescript": "^3.5.3"
   },
   "scripts": {
-    "dev": "lerna run start --no-prefix --stream --scope @mozillareality/three-particle-emitter",
+    "kitchen-sink": "lerna run start --no-prefix --stream --scope kitchen-sink-example",
     "build": "yarn clean && node ./scripts/build.js esm && node ./scripts/build.js cjs",
     "watch": "node ./scripts/build.js esm --watch",
     "lint": "tslint --project .",
