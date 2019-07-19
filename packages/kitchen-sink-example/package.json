@@ -7,7 +7,7 @@
     "start": "webpack-dev-server"
   },
   "dependencies": {
-    "@mozillareality/three-particle-emitter": "0.1.0",
+    "@mozillareality/three-particle-emitter": "^0.1.0",
     "three": "github:mozillareality/three.js#hubs/master"
   },
   "devDependencies": {
