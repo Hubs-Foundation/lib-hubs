@@ -21,7 +21,7 @@ async function main() {
   const templateName = argv[0];
   const packageName = argv[1];
 
-  const templatePath = path.resolve(__dirname, "templates", templateName);
+  const templatePath = path.resolve(__dirname, "..", "templates", templateName);
   const packagePath = path.resolve(__dirname, "..", "packages", packageName);
 
   console.log(`Copying "${templatePath}" to "${packagePath}"`);

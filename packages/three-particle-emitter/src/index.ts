@@ -239,7 +239,7 @@ export class ParticleEmitter extends Mesh {
 
       const normalizedAge = clamp(0, 1, this.ages[i] / this.lifetimes[i]);
 
-      let _EasingFunctions = EasingFunctions as { [name: string]: (k: number) => number };
+      const _EasingFunctions = EasingFunctions as { [name: string]: (k: number) => number };
 
       const velFactor = _EasingFunctions[this.velocityCurve](normalizedAge);
       const sizeFactor = _EasingFunctions[this.sizeCurve](normalizedAge);

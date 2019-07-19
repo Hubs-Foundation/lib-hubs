@@ -10,15 +10,16 @@
     "lerna": "^3.15.0",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
+    "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.5.3"
   },
   "scripts": {
-    "dev": "lerna run start --scope kitchen-sink-example",
+    "dev": "lerna run start --no-prefix --stream --scope @mozillareality/three-particle-emitter",
     "build": "yarn clean && node ./scripts/build.js esm && node ./scripts/build.js cjs",
     "watch": "node ./scripts/build.js esm --watch",
-    "lint": "tslint",
+    "lint": "tslint --project .",
     "clean": "rimraf ./packages/*/lib",
     "create-package": "node ./scripts/create-package.js"
   }
