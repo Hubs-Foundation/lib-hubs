@@ -77,7 +77,14 @@ Now three-particle-emitter is linked into hubs and will rebuild whenever it is c
 
 ### Publishing
 
-TODO
+Currently publishing is handled by `lerna publish`. This handles package versioning, tagging releases, pushing to git, and publishing to npm. This does not handle linting your code yet so please do so before publishing. At a later date we may automate this step via ci, but for now to publish run:
+
+```
+cd /path/to/lib-hubs
+lerna publish
+```
+
+And follow the instructions.
 
 ### Creating a new package
 
