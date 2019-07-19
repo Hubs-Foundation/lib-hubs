@@ -15,5 +15,8 @@
   "types": "lib/types/index.d.ts",
   "files": [
     "lib"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

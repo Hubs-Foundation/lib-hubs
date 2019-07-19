@@ -25,5 +25,8 @@
   "devDependencies": {
     "@types/webgl2": "0.0.4",
     "three": "github:mozillareality/three.js#hubs/master"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
