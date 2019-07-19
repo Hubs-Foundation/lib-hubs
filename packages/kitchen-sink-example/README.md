@@ -6,5 +6,12 @@ A showcase of the packages in hubs-monorepo.
 
 ```
 cd /path/to/hubs-monorepo
-yarn kitchen-sink
+yarn run watch
+```
+
+In another terminal session:
+
+```
+cd /path/to/hubs-monorepo/packages/kitchen-sink-example
+yarn start
 ```

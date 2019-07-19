@@ -52,17 +52,6 @@ In addition typescript definitions and typescript definition mappings are genera
 
 These built files are located in each package's `lib` directory which is included in the published npm package.
 
-### Running the kitchen-sink-example project
-
-The [`kitchen-sink-example`](packages/kitchen-sink-example) package is currently a showcase for all of the modules in this project.
-
-To run it:
-
-```
-cd /path/to/hubs-monorepo
-yarn kitchen-sink
-```
-
 ### Linking a package into another project
 
 If you want to use a development build of one of the packages in this repository in another project, use `yarn link`.
