@@ -22,7 +22,7 @@ The `lerna bootstrap` command is used to install all of the packages dependencie
 Before you can build you'll need to bootstrap the project:
 
 ```
-cd /path/to/hubs-monorepo
+cd /path/to/lib-hubs
 lerna bootstrap
 ```
 
@@ -31,14 +31,14 @@ lerna bootstrap
 To build all packages run the build script in the root directory:
 
 ```
-cd /path/to/hubs-monorepo
+cd /path/to/lib-hubs
 yarn build
 ```
 
 To build packages on each change run the watch script in the root directory:
 
 ```
-cd /path/to/hubs-monorepo
+cd /path/to/lib-hubs
 yarn watch
 ```
 
@@ -59,10 +59,10 @@ If you want to use a development build of one of the packages in this repository
 For example if you wanted to link [three-particle-emitter](packages/three-particle-emitter) into [hubs](https://github.com/mozilla/hubs):
 
 ```
-cd /path/to/hubs-monorepo/packages/three-particle-emitter
+cd /path/to/lib-hubs/packages/three-particle-emitter
 yarn link
 
-cd /path/to/hubs-monorepo
+cd /path/to/lib-hubs
 yarn watch
 ```
 
@@ -84,7 +84,7 @@ TODO
 Creating a new package in the mono repository is made easier with the `create-package` script.
 
 ```
-cd /path/to/hubs-monorepo
+cd /path/to/lib-hubs
 yarn create-package <template-name> <package-name>
 ```
 
@@ -124,7 +124,7 @@ To set `tslint` up in your editor of choice see [this list of tools](https://pal
 If you want to run `tslint` directly run:
 
 ```
-cd /path/to/hubs-monorepo
+cd /path/to/lib-hubs
 yarn lint
 ```
 

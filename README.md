@@ -1,4 +1,4 @@
-# hubs-monorepo
+# lib-hubs
 
 Common Hubs and Spoke libraries.
 
@@ -11,4 +11,4 @@ Libraries:
 
 Examples:
 
-- [kitchen-sink-example](packages/kitchen-sink-example) - A showcase of the packages in hubs-monorepo.
+- [kitchen-sink-example](packages/kitchen-sink-example) - A showcase of the packages in lib-hubs.
