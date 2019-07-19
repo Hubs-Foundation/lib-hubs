@@ -122,6 +122,10 @@ For example see [three-particle-emitter's tsconfig.json file](packages/three-par
 
 `three-particle-emitter` is dependent on `@mozillareality/easing-functions` located in `packages/easing-functions` so we need to add it as a project reference in `three-particle-emitter`'s `tsconfig.json`.
 
+### Importing an existing package
+
+It is possible to import an existing standalone repository as a package along with its git history using `lerna import` this process is [documented here](https://github.com/lerna/lerna/tree/master/commands/import).
+
 ### Linting / Code Style
 
 This project uses [tslint](https://palantir.github.io/tslint/) and [prettier](https://prettier.io/) for linting and code formatting.
