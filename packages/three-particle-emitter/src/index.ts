@@ -124,6 +124,8 @@ export class ParticleEmitter extends Mesh {
 
     super(geometry, material);
 
+    this.frustumCulled = false;
+
     this.emitterHeight = 1;
     this.emitterWidth = 1;
     this.initialPositions = [];
