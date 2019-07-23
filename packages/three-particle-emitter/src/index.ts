@@ -240,12 +240,6 @@ export class ParticleEmitter extends Mesh {
       // // Particle became alive
       if (curAge > 0 && prevAge <= 0) {
         particleColor[i * 4 + 3] = this.startOpacity;
-        continue;
-      }
-
-      // Particle died
-      if (curAge > this.lifetimes[i]) {
-        this.ages[i] = this.initialAges[i];
         particlePosition[i * 4] = this.initialPositions[i * 3] * this.worldScale.x;
         particlePosition[i * 4 + 1] = this.initialPositions[i * 3 + 1] * this.worldScale.y;
         particlePosition[i * 4 + 2] = 0;
@@ -253,6 +247,12 @@ export class ParticleEmitter extends Mesh {
         particleColor[i * 4] = this.startColor.r;
         particleColor[i * 4 + 1] = this.startColor.g;
         particleColor[i * 4 + 2] = this.startColor.b;
+        continue;
+      }
+
+      // Particle died
+      if (curAge > this.lifetimes[i]) {
+        this.ages[i] = this.initialAges[i];
         particleColor[i * 4 + 3] = 0; // Set opacity to zero
         continue;
       }
