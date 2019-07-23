@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "yarn clean && node ./scripts/build.js esm && node ./scripts/build.js cjs",
-    "publish-packages": "yarn clean && yarn build && lerna publish",
+    "publish-packages": "yarn build && lerna publish",
     "watch": "node ./scripts/build.js esm --watch",
     "lint": "tslint --project .",
     "clean": "rimraf ./packages/*/lib",
