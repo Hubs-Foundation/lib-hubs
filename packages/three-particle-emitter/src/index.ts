@@ -10,7 +10,8 @@ import {
   AddEquation,
   Texture,
   BufferAttribute,
-  RawShaderMaterial
+  RawShaderMaterial,
+  Matrix4
 } from "three";
 import * as EasingFunctions from "@mozillareality/easing-functions";
 
@@ -38,12 +39,14 @@ const vertexShader = `
   varying vec4 vColor;
   varying vec2 vUV;
 
+  uniform mat4 emitterMatrix;
+
   void main() {
     vUV = uv;
     vColor = particleColor;
 
     float particleScale = particlePosition.w;
-    vec4 transformedPosition = modelViewMatrix * vec4(particlePosition.xyz, 1.0);
+    vec4 transformedPosition = viewMatrix * emitterMatrix * vec4(particlePosition.xyz, 1.0);
     
     vec3 rotatedPosition = position;
     rotatedPosition.x = cos( particleAngle ) * position.x - sin( particleAngle ) * position.y;
@@ -77,9 +80,6 @@ interface ParticleEmitterGeometry extends InstancedBufferGeometry {
 }
 
 export class ParticleEmitter extends Mesh {
-
-  emitterHeight: number;
-  emitterWidth: number;
   initialPositions: number[];
   initialAges: number[];
   startSize: number;
@@ -105,15 +105,19 @@ export class ParticleEmitter extends Mesh {
   colorCurve: string;
   velocityCurve: string;
   sizeCurve: string;
+  worldScale: Vector3;
+  inverseWorldScale: Vector3;
 
   constructor(texture: Texture) {
     const planeGeometry = new PlaneBufferGeometry();
     const geometry = new InstancedBufferGeometry();
     geometry.index = planeGeometry.index;
     geometry.attributes = planeGeometry.attributes;
+    
     const material = new ShaderMaterial({
       uniforms: {
-        map: { value: texture }
+        map: { value: texture },
+        emitterMatrix: { value: new Matrix4() }
       },
       vertexShader,
       fragmentShader,
@@ -126,8 +130,6 @@ export class ParticleEmitter extends Mesh {
 
     this.frustumCulled = false;
 
-    this.emitterHeight = 1;
-    this.emitterWidth = 1;
     this.initialPositions = [];
     this.startSize = 0.25;
     this.endSize = 0.25;
@@ -153,6 +155,8 @@ export class ParticleEmitter extends Mesh {
     this.colorCurve = "linear";
     this.velocityCurve = "linear";
     this.sizeCurve = "linear";
+    this.worldScale = new Vector3();
+    this.inverseWorldScale = new Vector3();
     this.updateParticles();
   }
 
@@ -171,17 +175,19 @@ export class ParticleEmitter extends Mesh {
     const particleSizeRandomness = [];
     const angles = [];
 
+    this.getWorldScale(this.worldScale);
+
     for (let i = 0; i < this.particleCount; i++) {
       initialAges[i] = Math.random() * this.ageRandomness - this.ageRandomness;
       lifetimes[i] = this.lifetime + Math.random() * 2 * this.lifetimeRandomness;
       ages[i] = initialAges[i];
-      initialPositions[i * 3] = this.emitterWidth * (Math.random() * 2 - 1); // X
-      initialPositions[i * 3 + 1] = this.emitterHeight * (Math.random() * 2 - 1); // Y
+      initialPositions[i * 3] = Math.random() * 2 - 1; // X
+      initialPositions[i * 3 + 1] = Math.random() * 2 - 1; // Y
       initialPositions[i * 3 + 2] = 0; // Z
       particleSizeRandomness[i] = Math.random() * this.sizeRandomness;
 
-      positions.push(initialPositions[i * 3]);
-      positions.push(initialPositions[i * 3 + 1]);
+      positions.push(initialPositions[i * 3] * this.worldScale.x);
+      positions.push(initialPositions[i * 3 + 1] * this.worldScale.y);
       positions.push(initialPositions[i * 3 + 2]);
       positions.push(this.startSize + particleSizeRandomness[i]);
 
@@ -206,9 +212,21 @@ export class ParticleEmitter extends Mesh {
 
   update(dt: number) {
     const geometry = this.geometry as ParticleEmitterGeometry;
-    const position = geometry.attributes.particlePosition.array as Float32Array;
-    const color = geometry.attributes.particleColor.array as Float32Array;
+    const particlePosition = geometry.attributes.particlePosition.array as Float32Array;
+    const particleColor = geometry.attributes.particleColor.array as Float32Array;
     const particleAngle = geometry.attributes.particleAngle.array as Float32Array;
+
+    this.getWorldScale(this.worldScale);
+    this.inverseWorldScale.set(
+      1 / this.worldScale.x,
+      1 / this.worldScale.y,
+      1 / this.worldScale.z
+    );
+    
+    const material = this.material as ShaderMaterial;
+    const emitterMatrix: Matrix4 = material.uniforms.emitterMatrix.value;
+    emitterMatrix.copy(this.matrixWorld);
+    emitterMatrix.scale(this.inverseWorldScale);
 
     for (let i = 0; i < this.particleCount; i++) {
       const prevAge = this.ages[i];
@@ -221,21 +239,21 @@ export class ParticleEmitter extends Mesh {
 
       // // Particle became alive
       if (curAge > 0 && prevAge <= 0) {
-        color[i * 4 + 3] = this.startOpacity;
+        particleColor[i * 4 + 3] = this.startOpacity;
         continue;
       }
 
       // Particle died
       if (curAge > this.lifetimes[i]) {
         this.ages[i] = this.initialAges[i];
-        position[i * 4] = this.initialPositions[i * 3];
-        position[i * 4 + 1] = this.initialPositions[i * 3 + 1];
-        position[i * 4 + 2] = this.initialPositions[i * 3 + 2];
-        position[i * 4 + 3] = this.startSize + this.particleSizeRandomness[i];
-        color[i * 4] = this.startColor.r;
-        color[i * 4 + 1] = this.startColor.g;
-        color[i * 4 + 2] = this.startColor.b;
-        color[i * 4 + 3] = 0; // Set opacity to zero
+        particlePosition[i * 4] = this.initialPositions[i * 3] * this.worldScale.x;
+        particlePosition[i * 4 + 1] = this.initialPositions[i * 3 + 1] * this.worldScale.y;
+        particlePosition[i * 4 + 2] = 0;
+        particlePosition[i * 4 + 3] = this.startSize + this.particleSizeRandomness[i];
+        particleColor[i * 4] = this.startColor.r;
+        particleColor[i * 4 + 1] = this.startColor.g;
+        particleColor[i * 4 + 2] = this.startColor.b;
+        particleColor[i * 4 + 3] = 0; // Set opacity to zero
         continue;
       }
 
@@ -247,10 +265,10 @@ export class ParticleEmitter extends Mesh {
       const sizeFactor = _EasingFunctions[this.sizeCurve](normalizedAge);
       const colorFactor = _EasingFunctions[this.colorCurve](normalizedAge);
 
-      position[i * 4] += lerp(this.startVelocity.x, this.endVelocity.x, velFactor) * dt;
-      position[i * 4 + 1] += lerp(this.startVelocity.y, this.endVelocity.y, velFactor) * dt;
-      position[i * 4 + 2] += lerp(this.startVelocity.z, this.endVelocity.z, velFactor) * dt;
-      position[i * 4 + 3] = lerp(
+      particlePosition[i * 4] += lerp(this.startVelocity.x, this.endVelocity.x, velFactor) * dt;
+      particlePosition[i * 4 + 1] += lerp(this.startVelocity.y, this.endVelocity.y, velFactor) * dt;
+      particlePosition[i * 4 + 2] += lerp(this.startVelocity.z, this.endVelocity.z, velFactor) * dt;
+      particlePosition[i * 4 + 3] = lerp(
         this.startSize + this.particleSizeRandomness[i],
         this.endSize + this.particleSizeRandomness[i],
         sizeFactor
@@ -259,16 +277,16 @@ export class ParticleEmitter extends Mesh {
 
       if (colorFactor <= 0.5) {
         const colorFactor1 = colorFactor / 0.5;
-        color[i * 4] = lerp(this.startColor.r, this.middleColor.r, colorFactor1);
-        color[i * 4 + 1] = lerp(this.startColor.g, this.middleColor.g, colorFactor1);
-        color[i * 4 + 2] = lerp(this.startColor.b, this.middleColor.b, colorFactor1);
-        color[i * 4 + 3] = lerp(this.startOpacity, this.middleOpacity, colorFactor1);
+        particleColor[i * 4] = lerp(this.startColor.r, this.middleColor.r, colorFactor1);
+        particleColor[i * 4 + 1] = lerp(this.startColor.g, this.middleColor.g, colorFactor1);
+        particleColor[i * 4 + 2] = lerp(this.startColor.b, this.middleColor.b, colorFactor1);
+        particleColor[i * 4 + 3] = lerp(this.startOpacity, this.middleOpacity, colorFactor1);
       } else if (colorFactor > 0.5) {
         const colorFactor2 = (colorFactor - 0.5) / 0.5;
-        color[i * 4] = lerp(this.middleColor.r, this.endColor.r, colorFactor2);
-        color[i * 4 + 1] = lerp(this.middleColor.g, this.endColor.g, colorFactor2);
-        color[i * 4 + 2] = lerp(this.middleColor.b, this.endColor.b, colorFactor2);
-        color[i * 4 + 3] = lerp(this.middleOpacity, this.endOpacity, colorFactor2);
+        particleColor[i * 4] = lerp(this.middleColor.r, this.endColor.r, colorFactor2);
+        particleColor[i * 4 + 1] = lerp(this.middleColor.g, this.endColor.g, colorFactor2);
+        particleColor[i * 4 + 2] = lerp(this.middleColor.b, this.endColor.b, colorFactor2);
+        particleColor[i * 4 + 3] = lerp(this.middleOpacity, this.endOpacity, colorFactor2);
       }
     }
 
@@ -291,8 +309,6 @@ export class ParticleEmitter extends Mesh {
     this.middleOpacity = source.middleOpacity;
     this.endOpacity = source.endOpacity;
     this.colorCurve = source.colorCurve;
-    this.emitterHeight = source.emitterHeight;
-    this.emitterWidth = source.emitterWidth;
     this.sizeCurve = source.sizeCurve;
     this.startSize = source.startSize;
     this.endSize = source.endSize;
