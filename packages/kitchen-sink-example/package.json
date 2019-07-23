@@ -1,13 +1,13 @@
 {
   "name": "kitchen-sink-example",
   "license": "MPL-2.0",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server"
   },
   "dependencies": {
-    "@mozillareality/three-particle-emitter": "^0.1.4",
+    "@mozillareality/three-particle-emitter": "^0.1.5",
     "three": "github:mozillareality/three.js#hubs/master"
   },
   "devDependencies": {
