@@ -302,9 +302,9 @@ export class ParticleEmitter extends Mesh {
     const sourceMaterial = source.material as RawShaderMaterial;
 
     material.uniforms.map.value = sourceMaterial.uniforms.map.value;
-    this.startColor = source.startColor;
-    this.middleColor = source.middleColor;
-    this.endColor = source.endColor;
+    this.startColor.copy(source.startColor);
+    this.middleColor.copy(source.middleColor);
+    this.endColor.copy(source.endColor);
     this.startOpacity = source.startOpacity;
     this.middleOpacity = source.middleOpacity;
     this.endOpacity = source.endOpacity;
@@ -317,8 +317,8 @@ export class ParticleEmitter extends Mesh {
     this.lifetime = source.lifetime;
     this.lifetimeRandomness = source.lifetimeRandomness;
     this.particleCount = source.particleCount;
-    this.startVelocity = source.startVelocity;
-    this.endVelocity = source.endVelocity;
+    this.startVelocity.copy(source.startVelocity); 
+    this.endVelocity.copy(source.endVelocity);
     this.velocityCurve = source.velocityCurve;
     this.angularVelocity = source.angularVelocity;
 
