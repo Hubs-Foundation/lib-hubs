@@ -109,7 +109,7 @@ export class ParticleEmitter extends Mesh {
   inverseWorldScale: Vector3;
 
   constructor(texture: Texture) {
-    const planeGeometry = new PlaneBufferGeometry();
+    const planeGeometry = new PlaneBufferGeometry(1, 1, 1, 1, texture && texture.flipY);
     const geometry = new InstancedBufferGeometry();
     geometry.index = planeGeometry.index;
     geometry.attributes = planeGeometry.attributes;
@@ -161,7 +161,8 @@ export class ParticleEmitter extends Mesh {
   }
 
   updateParticles() {
-    const planeGeometry = new PlaneBufferGeometry();
+    const texture = super.material ? (super.material as ShaderMaterial).uniforms.map.value: null;
+    const planeGeometry = new PlaneBufferGeometry(1, 1, 1, 1, texture && texture.flipY);
     const tempGeo = new InstancedBufferGeometry();
     tempGeo.index = planeGeometry.index;
     tempGeo.attributes = planeGeometry.attributes;
