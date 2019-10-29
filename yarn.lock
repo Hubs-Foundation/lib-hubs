@@ -6591,7 +6591,7 @@ text-extensions@^2.0.0:
 
 "three@github:mozillareality/three.js#hubs/master":
   version "0.105.1"
-  resolved "https://codeload.github.com/mozillareality/three.js/tar.gz/6041920b6f3c8929ee631a5e14460bf9db85835d"
+  resolved "https://codeload.github.com/mozillareality/three.js/tar.gz/7456c6392ade9815104a0f17188bfd3f940799b3"
 
 through2@^2.0.0, through2@^2.0.2:
   version "2.0.5"
