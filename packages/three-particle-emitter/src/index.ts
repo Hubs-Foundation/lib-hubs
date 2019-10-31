@@ -161,7 +161,7 @@ export class ParticleEmitter extends Mesh {
   }
 
   updateParticles() {
-    const texture = super.material ? (super.material as ShaderMaterial).uniforms.map.value: null;
+    const texture = (super.material as ShaderMaterial).uniforms.map.value;
     const planeGeometry = new PlaneBufferGeometry(1, 1, 1, 1, texture && texture.flipY);
     const tempGeo = new InstancedBufferGeometry();
     tempGeo.index = planeGeometry.index;
