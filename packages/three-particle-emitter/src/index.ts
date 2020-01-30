@@ -11,7 +11,9 @@ import {
   Texture,
   BufferAttribute,
   RawShaderMaterial,
-  Matrix4
+  Matrix4,
+  UniformsUtils,
+  UniformsLib
 } from "three";
 import * as EasingFunctions from "@mozillareality/easing-functions";
 
@@ -32,6 +34,8 @@ export function clamp(min: number, max: number, value: number) {
 }
 
 const vertexShader = `
+  #include <common>
+
   attribute vec4 particlePosition;
   attribute vec4 particleColor;
   attribute float particleAngle;
@@ -41,24 +45,31 @@ const vertexShader = `
 
   uniform mat4 emitterMatrix;
 
+  #include <fog_pars_vertex>
+
   void main() {
     vUV = uv;
     vColor = particleColor;
 
     float particleScale = particlePosition.w;
-    vec4 transformedPosition = viewMatrix * emitterMatrix * vec4(particlePosition.xyz, 1.0);
+    vec4 mvPosition = viewMatrix * emitterMatrix * vec4(particlePosition.xyz, 1.0);
     
     vec3 rotatedPosition = position;
     rotatedPosition.x = cos( particleAngle ) * position.x - sin( particleAngle ) * position.y;
     rotatedPosition.y = sin( particleAngle ) * position.x + cos( particleAngle ) * position.y;
 
-    transformedPosition.xyz += rotatedPosition * particleScale;
+    mvPosition.xyz += rotatedPosition * particleScale;
 
-    gl_Position = projectionMatrix * transformedPosition;
+    gl_Position = projectionMatrix * mvPosition;
+
+    #include <fog_vertex>
   }
 `;
 
 const fragmentShader = `
+  #include <common>
+  #include <fog_pars_fragment>
+
   uniform sampler2D map;
 
   varying vec2 vUV;
@@ -66,6 +77,7 @@ const fragmentShader = `
 
   void main() {
     gl_FragColor = texture2D(map,  vUV) * vColor;
+    #include <fog_fragment>
   }
 `;
 
@@ -115,14 +127,15 @@ export class ParticleEmitter extends Mesh {
     geometry.attributes = planeGeometry.attributes;
     
     const material = new ShaderMaterial({
-      uniforms: {
+      uniforms: UniformsUtils.merge([{
         map: { value: texture },
         emitterMatrix: { value: new Matrix4() }
-      },
+      }, UniformsLib.fog]),
       vertexShader,
       fragmentShader,
       transparent: true,
       depthWrite: false,
+      fog: true,
       blendEquation: AddEquation
     });
 
