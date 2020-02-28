@@ -2,7 +2,6 @@ node_modules/
 .rpt2_cache/
 .DS_Store
 .vscode/settings.json
-packages/*/lib/
 lerna-debug.log
 npm-debug.log
 yarn-error.log
