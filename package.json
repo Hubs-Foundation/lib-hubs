@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "lib-hubs",
   "private": true,
   "version": "0.0.1",
   "workspaces": [
