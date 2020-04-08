@@ -13,7 +13,8 @@ import {
   RawShaderMaterial,
   Matrix4,
   UniformsUtils,
-  UniformsLib
+  UniformsLib,
+  DynamicDrawUsage
 } from "three";
 import * as EasingFunctions from "@mozillareality/easing-functions";
 
@@ -208,12 +209,12 @@ export class ParticleEmitter extends Mesh {
       angles.push(0);
       colors.push(this.startColor.r, this.startColor.g, this.startColor.b, 0);
     }
-    tempGeo.addAttribute(
+    tempGeo.setAttribute(
       "particlePosition",
-      new InstancedBufferAttribute(new Float32Array(positions), 4).setDynamic(true)
+      new InstancedBufferAttribute(new Float32Array(positions), 4).setUsage(DynamicDrawUsage)
     );
-    tempGeo.addAttribute("particleColor", new InstancedBufferAttribute(new Float32Array(colors), 4).setDynamic(true));
-    tempGeo.addAttribute("particleAngle", new InstancedBufferAttribute(new Float32Array(angles), 1).setDynamic(true));
+    tempGeo.setAttribute("particleColor", new InstancedBufferAttribute(new Float32Array(colors), 4).setUsage(DynamicDrawUsage));
+    tempGeo.setAttribute("particleAngle", new InstancedBufferAttribute(new Float32Array(angles), 1).setUsage(DynamicDrawUsage));
 
     this.geometry = tempGeo as ParticleEmitterGeometry;
     this.initialPositions = initialPositions;
