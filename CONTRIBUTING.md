@@ -4,7 +4,7 @@ This repository is setup as a monorepo using [lerna](https://lerna.js.org/) and 
 
 ### Setup
 
-If you haven't already, install node, yarn and lerna:
+If you haven't already, install `node`, `yarn` and `lerna`:
 
 [Install Node](https://nodejs.org/)
 
@@ -13,6 +13,12 @@ Then run:
 ```
 npm install -g yarn
 yarn global add lerna
+```
+
+You may need to add the directory where yarn installs global packages like `lerna` to your path. For example, in `bash`:
+```sh
+# in ~/.bashrc
+export PATH="$(yarn global bin):$PATH"
 ```
 
 ### Bootstrapping
@@ -74,6 +80,8 @@ yarn link three-particle-emitter
 ```
 
 Now three-particle-emitter is linked into hubs and will rebuild whenever it is changed.
+
+(Optional alternative) There is a script called `/scripts/setup-hubs-links.sh` that will attempt to setup links between this directory and your `hubs` directory. It makes sure that they refer to the same version of `THREE.js` and it avoids a naming conflict where `hubs` code refers to `<dir_hubs>/node_modules/lib-hubs` whereas the usual link method creates a directory at `<dir_hubs>/node_modules/@mozillareality/three-particle-emitter`, and so is not used by default.
 
 ### Publishing
 
