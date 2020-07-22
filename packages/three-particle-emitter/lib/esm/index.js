@@ -186,6 +186,18 @@ export class ParticleEmitter extends Mesh {
             }
             const normalizedAge = clamp(0, 1, this.ages[i] / this.lifetimes[i]);
             const _EasingFunctions = EasingFunctions;
+            if (!_EasingFunctions[this.velocityCurve]) {
+                console.warn(`Unknown velocity curve type ${this.velocityCurve} in particle emitter. Falling back to linear.`);
+                this.velocityCurve = "linear";
+            }
+            if (!_EasingFunctions[this.sizeCurve]) {
+                console.warn(`Unknown size curve type ${this.sizeCurve} in particle emitter. Falling back to linear.`);
+                this.sizeCurve = "linear";
+            }
+            if (!_EasingFunctions[this.colorCurve]) {
+                console.warn(`Unknown color curve type ${this.colorCurve} in particle emitter. Falling back to linear.`);
+                this.colorCurve = "linear";
+            }
             const velFactor = _EasingFunctions[this.velocityCurve](normalizedAge);
             const sizeFactor = _EasingFunctions[this.sizeCurve](normalizedAge);
             const colorFactor = _EasingFunctions[this.colorCurve](normalizedAge);
