@@ -6590,8 +6590,8 @@ text-extensions@^2.0.0:
   integrity sha512-F91ZqLgvi1E0PdvmxMgp+gcf6q8fMH7mhdwWfzXnl1k+GbpQDmi8l7DzLC5JTASKbwpY3TfxajAUzAXcv2NmsQ==
 
 "three@github:mozillareality/three.js#hubs/master":
-  version "0.105.1"
-  resolved "https://codeload.github.com/mozillareality/three.js/tar.gz/7456c6392ade9815104a0f17188bfd3f940799b3"
+  version "0.111.0"
+  resolved "https://codeload.github.com/mozillareality/three.js/tar.gz/1fe0e7549e79caf58865c20d42c239a1afd06292"
 
 through2@^2.0.0, through2@^2.0.2:
   version "2.0.5"
