@@ -23,6 +23,17 @@ function clamp(min, max, value) {
     return value;
 }
 exports.clamp = clamp;
+function flipV(geometry) {
+    // Three.js seems to assume texture flipY is true for all its built in geometry
+    // but we turn this off on our texture loader since createImageBitmap in Firefox
+    // does not support flipping. Then we flip the v of uv for flipY = false texture.
+    // @TODO: There is a similar function in Hubs client core. Should we reuse it?
+    const uv = geometry.getAttribute("uv");
+    for (let i = 0; i < uv.count; i++) {
+        uv.setY(i, 1.0 - uv.getY(i));
+    }
+    return geometry;
+}
 const vertexShader = `
   #include <common>
 
@@ -71,7 +82,10 @@ const fragmentShader = `
 `;
 class ParticleEmitter extends three_1.Mesh {
     constructor(texture) {
-        const planeGeometry = new three_1.PlaneBufferGeometry(1, 1, 1, 1, texture && texture.flipY);
+        const planeGeometry = new three_1.PlaneBufferGeometry(1, 1, 1, 1);
+        if (texture && !texture.flipY) {
+            flipV(planeGeometry);
+        }
         const geometry = new three_1.InstancedBufferGeometry();
         geometry.index = planeGeometry.index;
         geometry.attributes = planeGeometry.attributes;
@@ -120,7 +134,10 @@ class ParticleEmitter extends three_1.Mesh {
     }
     updateParticles() {
         const texture = this.material.uniforms.map.value;
-        const planeGeometry = new three_1.PlaneBufferGeometry(1, 1, 1, 1, texture && texture.flipY);
+        const planeGeometry = new three_1.PlaneBufferGeometry(1, 1, 1, 1);
+        if (texture && !texture.flipY) {
+            flipV(planeGeometry);
+        }
         const tempGeo = new three_1.InstancedBufferGeometry();
         tempGeo.index = planeGeometry.index;
         tempGeo.attributes = planeGeometry.attributes;
@@ -197,6 +214,18 @@ class ParticleEmitter extends three_1.Mesh {
             }
             const normalizedAge = clamp(0, 1, this.ages[i] / this.lifetimes[i]);
             const _EasingFunctions = EasingFunctions;
+            if (!_EasingFunctions[this.velocityCurve]) {
+                console.warn(`Unknown velocity curve type ${this.velocityCurve} in particle emitter. Falling back to linear.`);
+                this.velocityCurve = "linear";
+            }
+            if (!_EasingFunctions[this.sizeCurve]) {
+                console.warn(`Unknown size curve type ${this.sizeCurve} in particle emitter. Falling back to linear.`);
+                this.sizeCurve = "linear";
+            }
+            if (!_EasingFunctions[this.colorCurve]) {
+                console.warn(`Unknown color curve type ${this.colorCurve} in particle emitter. Falling back to linear.`);
+                this.colorCurve = "linear";
+            }
             const velFactor = _EasingFunctions[this.velocityCurve](normalizedAge);
             const sizeFactor = _EasingFunctions[this.sizeCurve](normalizedAge);
             const colorFactor = _EasingFunctions[this.colorCurve](normalizedAge);
