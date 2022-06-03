@@ -1,12 +1,29 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ParticleEmitter = exports.clamp = exports.lerp = void 0;
 const three_1 = require("three");
 const EasingFunctions = __importStar(require("@mozillareality/easing-functions"));
 function lerp(start, end, value) {
@@ -98,6 +115,9 @@ class ParticleEmitter extends three_1.Mesh {
             fragmentShader,
             transparent: true,
             depthWrite: false,
+            // TODO: Resolve the root issue. fog property seems to have
+            // been removed from Three.js ShaderMaterial at some point.
+            // @ts-ignore
             fog: true,
             blendEquation: three_1.AddEquation
         });
@@ -233,7 +253,7 @@ class ParticleEmitter extends three_1.Mesh {
             particlePosition[i * 4 + 1] += lerp(this.startVelocity.y, this.endVelocity.y, velFactor) * dt;
             particlePosition[i * 4 + 2] += lerp(this.startVelocity.z, this.endVelocity.z, velFactor) * dt;
             particlePosition[i * 4 + 3] = lerp(this.startSize + this.particleSizeRandomness[i], this.endSize + this.particleSizeRandomness[i], sizeFactor);
-            particleAngle[i] += this.angularVelocity * three_1.Math.DEG2RAD * dt;
+            particleAngle[i] += this.angularVelocity * three_1.MathUtils.DEG2RAD * dt;
             if (colorFactor <= 0.5) {
                 const colorFactor1 = colorFactor / 0.5;
                 particleColor[i * 4] = lerp(this.startColor.r, this.middleColor.r, colorFactor1);

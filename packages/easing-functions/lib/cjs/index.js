@@ -6,6 +6,7 @@
 // http://robertpenner.com/easing/
 // http://robertpenner.com/easing_terms_of_use.html
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.bounceInOut = exports.bounceOut = exports.bounceIn = exports.backInOut = exports.backOut = exports.backIn = exports.elasticInOut = exports.elasticOut = exports.elasticIn = exports.circularInOut = exports.circularOut = exports.circularIn = exports.exponentialInOut = exports.exponentialOut = exports.exponentialIn = exports.sinusoidalInOut = exports.sinusoidalOut = exports.sinusoidalIn = exports.quinticInOut = exports.quinticOut = exports.quinticIn = exports.quarticInOut = exports.quarticOut = exports.quarticIn = exports.cubicInOut = exports.cubicOut = exports.cubicIn = exports.quadraticInOut = exports.quadraticOut = exports.quadraticIn = exports.linear = void 0;
 function linear(k) {
     return k;
 }

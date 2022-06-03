@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "@mozillareality/three-particle-emitter": "^0.2.2",
-    "three": "github:mozillareality/three.js#hubs/master"
+    "three": "github:mozillareality/three.js#hubs-patches-141"
   },
   "devDependencies": {
-    "@types/webgl2": "0.0.4",
+    "@types/webgl2": "0.0.6",
     "html-webpack-plugin": "^3.2.0",
     "ts-loader": "^6.0.4",
     "webpack": "^4.30.0",

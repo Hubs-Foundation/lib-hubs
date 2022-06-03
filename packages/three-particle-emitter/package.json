@@ -23,8 +23,9 @@
     "three": "*"
   },
   "devDependencies": {
-    "@types/webgl2": "0.0.4",
-    "three": "github:mozillareality/three.js#hubs/master"
+    "@types/webgl2": "0.0.6",
+    "@types/three": "0.141.0",
+    "three": "github:mozillareality/three.js#hubs-patches-141"
   },
   "publishConfig": {
     "access": "public"

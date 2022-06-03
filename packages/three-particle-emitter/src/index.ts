@@ -6,7 +6,7 @@ import {
   Vector3,
   Color,
   InstancedBufferAttribute,
-  Math as _Math,
+  MathUtils,
   AddEquation,
   Texture,
   BufferAttribute,
@@ -151,7 +151,10 @@ export class ParticleEmitter extends Mesh {
       fragmentShader,
       transparent: true,
       depthWrite: false,
-      fog: true,
+      // TODO: Resolve the root issue. fog property seems to have
+      // been removed from Three.js ShaderMaterial at some point.
+      // @ts-ignore
+      fog: true, 
       blendEquation: AddEquation
     });
 
@@ -318,7 +321,7 @@ export class ParticleEmitter extends Mesh {
         this.endSize + this.particleSizeRandomness[i],
         sizeFactor
       );
-      particleAngle[i] += this.angularVelocity * _Math.DEG2RAD * dt;
+      particleAngle[i] += this.angularVelocity * MathUtils.DEG2RAD * dt;
 
       if (colorFactor <= 0.5) {
         const colorFactor1 = colorFactor / 0.5;
