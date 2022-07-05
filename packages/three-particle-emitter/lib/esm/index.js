@@ -1,4 +1,4 @@
-import { Mesh, InstancedBufferGeometry, PlaneBufferGeometry, ShaderMaterial, Vector3, Color, InstancedBufferAttribute, Math as _Math, AddEquation, Matrix4, UniformsUtils, UniformsLib, DynamicDrawUsage } from "three";
+import { Mesh, InstancedBufferGeometry, PlaneBufferGeometry, ShaderMaterial, Vector3, Color, InstancedBufferAttribute, MathUtils, AddEquation, Matrix4, UniformsUtils, UniformsLib, DynamicDrawUsage } from "three";
 import * as EasingFunctions from "@mozillareality/easing-functions";
 export function lerp(start, end, value) {
     return (end - start) * value + start;
@@ -87,6 +87,9 @@ export class ParticleEmitter extends Mesh {
             fragmentShader,
             transparent: true,
             depthWrite: false,
+            // TODO: Resolve the root issue. fog property seems to have
+            // been removed from Three.js ShaderMaterial at some point.
+            // @ts-ignore
             fog: true,
             blendEquation: AddEquation
         });
@@ -222,7 +225,7 @@ export class ParticleEmitter extends Mesh {
             particlePosition[i * 4 + 1] += lerp(this.startVelocity.y, this.endVelocity.y, velFactor) * dt;
             particlePosition[i * 4 + 2] += lerp(this.startVelocity.z, this.endVelocity.z, velFactor) * dt;
             particlePosition[i * 4 + 3] = lerp(this.startSize + this.particleSizeRandomness[i], this.endSize + this.particleSizeRandomness[i], sizeFactor);
-            particleAngle[i] += this.angularVelocity * _Math.DEG2RAD * dt;
+            particleAngle[i] += this.angularVelocity * MathUtils.DEG2RAD * dt;
             if (colorFactor <= 0.5) {
                 const colorFactor1 = colorFactor / 0.5;
                 particleColor[i * 4] = lerp(this.startColor.r, this.middleColor.r, colorFactor1);
