@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/webgl2": "0.0.6",
     "@types/three": "0.141.0",
-    "three": "github:mozillareality/three.js#hubs-patches-141"
+    "three": "github:mozillareality/three.js#65b5105908f5f135cad25fed07e25f15f3876777"
   },
   "publishConfig": {
     "access": "public"
