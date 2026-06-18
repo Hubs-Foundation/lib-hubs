@@ -1,4 +1,4 @@
-import { Mesh, InstancedBufferGeometry, PlaneBufferGeometry, ShaderMaterial, Vector3, Color, InstancedBufferAttribute, MathUtils, AddEquation, Matrix4, UniformsUtils, UniformsLib, DynamicDrawUsage } from "three";
+import { Mesh, InstancedBufferGeometry, PlaneGeometry, ShaderMaterial, Vector3, Color, InstancedBufferAttribute, MathUtils, AddEquation, Matrix4, UniformsUtils, UniformsLib, DynamicDrawUsage } from "three";
 import * as EasingFunctions from "@mozillareality/easing-functions";
 export function lerp(start, end, value) {
     return (end - start) * value + start;
@@ -71,7 +71,7 @@ const fragmentShader = `
 `;
 export class ParticleEmitter extends Mesh {
     constructor(texture) {
-        const planeGeometry = new PlaneBufferGeometry(1, 1, 1, 1);
+        const planeGeometry = new PlaneGeometry(1, 1, 1, 1);
         if (texture && !texture.flipY) {
             flipV(planeGeometry);
         }
@@ -126,7 +126,7 @@ export class ParticleEmitter extends Mesh {
     }
     updateParticles() {
         const texture = this.material.uniforms.map.value;
-        const planeGeometry = new PlaneBufferGeometry(1, 1, 1, 1);
+        const planeGeometry = new PlaneGeometry(1, 1, 1, 1);
         if (texture && !texture.flipY) {
             flipV(planeGeometry);
         }

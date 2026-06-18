@@ -99,7 +99,7 @@ const fragmentShader = `
 `;
 class ParticleEmitter extends three_1.Mesh {
     constructor(texture) {
-        const planeGeometry = new three_1.PlaneBufferGeometry(1, 1, 1, 1);
+        const planeGeometry = new three_1.PlaneGeometry(1, 1, 1, 1);
         if (texture && !texture.flipY) {
             flipV(planeGeometry);
         }
@@ -154,7 +154,7 @@ class ParticleEmitter extends three_1.Mesh {
     }
     updateParticles() {
         const texture = this.material.uniforms.map.value;
-        const planeGeometry = new three_1.PlaneBufferGeometry(1, 1, 1, 1);
+        const planeGeometry = new three_1.PlaneGeometry(1, 1, 1, 1);
         if (texture && !texture.flipY) {
             flipV(planeGeometry);
         }
